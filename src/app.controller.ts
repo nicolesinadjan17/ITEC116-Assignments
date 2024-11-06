@@ -1,28 +1,17 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 
-@Controller('assignments123')
-export class AssignmentController {
-
-  @Get('fibonacci/:n')
-  getFibonacci(@Param('n') n: string): { sequence: number[] } {
-    const count = parseInt(n, 10);
-
-    if (isNaN(count) || count < 1) {
-      throw new Error("Parameter 'n' must be a positive integer.");
-    }
-
-    const sequence = this.calculateFibonacci(count);
-    return { sequence };
+@Controller('assignments')
+export class AssignmentsController {
+  @Get('factorial/:number')
+  calculateFactorial(@Param('number', ParseIntPipe) number: number): { factorial: number | string } {
+    const result = this.factorial(number);
+    return { factorial: result };
   }
 
-  private calculateFibonacci(n: number): number[] {
-    if (n === 1) return [0];
-    if (n === 2) return [0, 1];
-
-    const sequence = [0, 1];
-    for (let i = 2; i < n; i++) {
-      sequence.push(sequence[i - 1] + sequence[i - 2]);
-    }
-    return sequence;
+  // Helper function to calculate factorial
+  private factorial(num: number): number | string {
+    if (num < 0) return "Factorial not defined for negative numbers";
+    if (num === 0 || num === 1) return 1;
+    return num * this.factorial(num - 1);
   }
 }
